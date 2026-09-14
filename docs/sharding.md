@@ -4,20 +4,23 @@
 
     Sharding support is available starting with {{pcsm.full_name}} 0.7.0 and is currently in technical preview stage. We encourage you to try it out and share your feedback. This will help us improve the feature in future releases.
 
-{{pcsm.full_name}} supports replication between sharded MongoDB clusters, enabling you to migrate or synchronize data from one sharded deployment to another. This capability allows you to migrate sharded clusters with minimal downtime and synchronize data between sharded clusters for testing or development purposes.
+{{pcsm.full_name}} supports replication between sharded MongoDB clusters. You can use it to migrate data from one sharded deployment to another with minimal downtime, or to keep data synchronized for testing and development.
 
 ## Overview
 
-The workflow for sharded clusters is similar to replica sets. See [How {{pcsm.full_name}} works](intro.md#replication-workflows) for the complete workflow overview. The key difference is that {{pcsm.short}} connects to `mongos` instances on both the source and target clusters instead of replica set members.
+The replication workflow for sharded clusters is similar to the workflow for replica sets. See [How {{pcsm.full_name}} works](intro.md#replication-workflows) for an overview of the replication stages.
 
-Since {{pcsm.short}} connects through `mongos`, the cluster topology doesn't matter. This means the source and target clusters can have different numbers of shards.
+For sharded deployments, {{pcsm.short}} connects to mongos on both the source and target clusters instead of connecting directly to individual shard members. The source and target can have different numbers of shards.
 
-{{pcsm.short}} does not continuously replicate sharding metadata from the source to the target. For collections with a ranged shard key, it copies the initial chunk boundaries to the target before the clone starts. Any sharding metadata changes made after that are not replicated. The primary shard name for a collection may also differ between the source and target clusters. See [Chunk distribution](#chunk-distribution).
+{{pcsm.short}} does not continuously replicate sharding metadata. For collections with a ranged shard key, it uses the source chunk boundaries to prepare the target before the initial clone begins. Changes to the chunk layout that occur later on the source are not replicated to the target.
+
+The primary shard assignment can also differ between the source and target clusters. See [Chunk distribution](#chunk-distribution).
 
 ## Prerequisites
 
-* {{pcsm.full_name}} version 0.7.0 or later
-* Source and target clusters must be sharded MongoDB deployments
+* If the target is a sharded MongoDB deployment, use {{pcsm.full_name}} 0.7.0 or later.
+* If the target is a replica set, use {{pcsm.full_name}} 0.10.0 or later.
+* The source must be a sharded MongoDB deployment.
 * Both clusters must be running the same MongoDB version. Check [Version requirements](deployment.md#version-requirements) for more information about supported versions.
 
 ## Connection string format
@@ -36,15 +39,35 @@ For detailed information about authentication and connection string configuratio
 
 ### Initial sync preparation
 
-Before starting the initial sync, {{pcsm.short}} checks which collections are sharded on the source cluster and creates corresponding sharded collections on the destination cluster. The sharding key is preserved from the source cluster. For ranged shard keys, {{pcsm.short}} also copies the initial chunk boundaries and ownership to the target; it does not replicate sharding metadata afterwards.
+For collections with a ranged shard key, {{pcsm.short}} uses the source chunk boundaries to pre-split the collection on the target before copying any documents. If the source and target have the same number of shards, PCSM preserves the source chunk ownership pattern. If the shard counts differ, PCSM uses the source boundaries and determines the chunk placement across the available target shards.
 
-For a ranged shard key, {{pcsm.short}} then pre-splits the collection using the source chunk boundaries, immediately after it shards the collection on the target and before it copies any documents. Collections with a hashed shard key keep the layout that `shardCollection` creates. See [Chunk distribution](#chunk-distribution).
+Collections with a hashed shard key keep the initial chunk layout created by MongoDB when shardCollection runs on the target.
+
+{{pcsm.short}} does not continuously replicate sharding metadata after the initial preparation. See [Chunk distribution](#chunk-distribution).
+
+### Replica set source to sharded target
+
+PCSM replicates data from a replica set source to a sharded cluster target, but it does not shard anything on the way in. Collections arrive on the target as unsharded collections on the primary shard, exactly as they existed on the source.
+
+There is no warning about this while it happens. The run completes normally, `pcsm status` reports success, and the logs show nothing unusual. The only way to notice is to check the collections on the target afterwards.
+
+!!! warning
+
+    If you are moving to a sharded cluster in order to distribute a large collection, this migration alone does not get you there. Shard the collections yourself on the target once replication is finalized, using [sh.shardCollection() :octicons-link-external-16:](https://www.mongodb.com/docs/manual/reference/method/sh.shardCollection/){:target="_blank"}.
+
+    Sharding a collection that already holds data means the balancer has to redistribute it afterwards, which takes time and I/O on a cluster you have just finished filling. Factor that into your cutover plan rather than discovering it on the day.
 
 ### Balancer operation
 
 {{pcsm.full_name}} connects to source and target clusters via a `mongos` instance. Therefore, you do not need to disable the balancer on either the source or target cluster before starting replication. The target cluster's balancer continues to operate normally and manages chunk distribution according to its own sharding configuration and balancer settings.
 
-For ranged shard keys, the target also starts from the source chunk boundaries, which leaves the target balancer less data to move once the clone begins. Chunk migrations on either cluster are not replicated to the other, so both clusters keep managing their own layout throughout. See [Manage sharded cluster balancer :octicons-link-external-16:](https://www.mongodb.com/docs/manual/tutorial/manage-sharded-cluster-balancer/){:target="_blank"} in the MongoDB documentation.
+For ranged shard keys, PCSM prepares the target using the source chunk boundaries before the clone begins. Chunk migrations, splits, and merges that occur later are not replicated between the clusters. Each cluster continues to manage its own chunk layout. See [Manage sharded cluster balancer :octicons-link-external-16:](https://www.mongodb.com/docs/manual/tutorial/manage-sharded-cluster-balancer/){:target="_blank"} in the MongoDB documentation.
+
+### If the pre-split fails
+
+If {{pcsm.short}} cannot prepare the chunk layout on the target, the initial sync fails. PCSM does not fall back to copying the data into an unsplit collection.
+
+Check the PCSM logs and resolve the reported problem on the target. Then start a new synchronization run from the initial sync stage.
 
 ## Chunk distribution
 
