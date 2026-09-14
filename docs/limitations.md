@@ -31,8 +31,7 @@ The following limitations apply specifically to sharded cluster replication:
 * When both the source and target are sharded clusters, {{pcsm.short}} does not continuously replicate sharding metadata. For ranged shard keys, PCSM uses the source chunk boundaries to initialize the target during the initial sync. Subsequent chunk migrations, splits, and merges are not reproduced on the target.
 * The primary shard assignment is not preserved. The target cluster can use a different primary shard.
 * Zone configuration is not replicated. See [Zones for sharded data :octicons-link-external-16:](https://www.mongodb.com/docs/manual/core/zone-sharding/).
-* PCSM does not replicate reshardCollection, unshardCollection, or refineCollectionShardKey operations. Changes to sharding metadata made by these operations are not reproduced on the target.
-
+* PCSM does not replicate `reshardCollection`, `unshardCollection`, or `refineCollectionShardKey` operations. Changes to sharding metadata made by these operations are not reproduced on the target.
 * Replica set to sharded cluster migrations do not apply a shard key. PCSM can copy data from a replica set source to a sharded cluster target, but the migrated collections remain unsharded. If you need sharded collections on the target, apply the required shard key separately.
 
 ## Data types
