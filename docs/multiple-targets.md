@@ -9,7 +9,7 @@ You can run multiple {{pcsm.full_name}} (PCSM) instances against the same source
 Each PCSM instance has:
 
 - The same source cluster
-- A different target cluster
+- Its own target cluster
 - Its own namespace filter
 
 Every instance runs the full replication workflow on its own: clone, replication, and finalization. See [How PCSM works](intro.md) for what happens at each stage.
