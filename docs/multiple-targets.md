@@ -148,7 +148,7 @@ The examples below use target clusters with no pre-existing application namespac
     db.getSiblingDB('db_1').docs.countDocuments({})
     ```
 
-    The first count matches the source. The second returns `0` rather than an error,
+    The first count matches the source. The second returns `0` rather than an error.
 
 
     PCSM recreates the source indexes on the target during finalization, so check that they arrived:
