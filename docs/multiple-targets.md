@@ -365,7 +365,7 @@ The examples below use target clusters with no pre-existing application namespac
 
 Every instance logs separately, so check each one for errors before you decommission the source or send traffic to a target. Command responses go to `stdout` and logs and errors go to `stderr`. See [Logging in Percona ClusterSync for MongoDB](logging.md).
 
-If an instance stops because of lost connectivity or a similar failure and you have not finalized it yet, bring it back with `pcsm resume --from-failure`. See [Resume the replication](pcsm-commands.md#resume) and the [Troubleshooting guide](troubleshooting.md).
+If an instance stops because of lost connectivity or a similar failure after `initialSync.completed` becomes `true` and before finalization, bring it back with `pcsm resume --from-failure`. An interruption during initial synchronization cannot be resumed; restart the clone as described in [Recover PCSM during initial data clone](troubleshooting.md#recover-pcsm-during-initial-data-clone). See [Resume the replication](pcsm-commands.md#resume) for command details.
 
 ## Next steps
 
