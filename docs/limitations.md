@@ -36,6 +36,12 @@ The following limitations apply specifically to sharded cluster replication:
 
 * During data replication, the following commands are not supported: `movePrimary`, `reshardCollecton`, `unshardCollection`, `refineCollectionShardKey`. Running them results in failed replication and you must start it anew, from the initial data sync stage.
 
+* Replica set to sharded cluster migrations do not apply a shard key
+
+    * PCSM can copy data from a replica set source to a sharded cluster target. However, it does not automatically shard the migrated collections or apply a shard key on the target.
+
+    * The migration can complete without an error or warning, but the collections remain unsharded. If your migration requires the collections to be sharded on the target, plan the sharding step separately. See, [Replica set source to sharded target](sharding.md#replica-set-source-to-sharded-target)
+
 ## Data types
 
 * Queryable encryption is not supported
