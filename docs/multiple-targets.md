@@ -25,7 +25,7 @@ Map out which instance owns which namespaces and which target before you start. 
 !!! warning "Starting replication overwrites target collections"
     `pcsm start` drops and recreates the collections that match your filter on the target, discarding any data already in them. Collections outside the filter stay as they are. Review each filter first, since a mistyped pattern affects only the target and leaves no trace on the source.
 
-The examples below replicate `db_0` to the first target and `db_1` to the second. Select the tab that matches your deployment.
+The examples below use target clusters with no pre-existing application namespaces. They replicate `db_0` to the first target and `db_1` to the second. Select the tab that matches your deployment.
 
 === "Replica set"
 
