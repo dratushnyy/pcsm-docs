@@ -276,7 +276,7 @@ The examples below replicate `db_0` to the first target and `db_1` to the second
                 "ok": true,
                 "state": "finalized",
                 "info": "Finalized",
-                "lagTimeSeconds": 2,
+                "lagTimeSeconds": 0,
                 "eventsRead": 6,
                 "eventsApplied": 5,
                 "lastReplicatedOpTime": {
