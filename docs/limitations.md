@@ -35,11 +35,6 @@ The following limitations apply specifically to sharded cluster replication:
 
 * Replica set to sharded cluster migrations do not apply a shard key. PCSM can copy data from a replica set source to a sharded cluster target, but the migrated collections remain unsharded. If you need sharded collections on the target, apply the required shard key separately.
 
-### Other
-
-* A single PCSM instance synchronizes one source cluster with one target cluster. To synchronize selected namespaces from one source to different targets, run separate PCSM instances. See Replicate from one source to multiple targets.
-* You cannot resume the initial synchronization after it fails. Resolve the issue and start a new synchronization run from the beginning.
-
 ## Data types
 
 * Queryable encryption is not supported
@@ -56,10 +51,8 @@ The following limitations apply specifically to sharded cluster replication:
 
 The following functionalities are not supported:
 
-* Multiple source or multiple target clusters 
-* You cannot resume initial synchronization if an issue occurred. You must start it from scratch.
+* A single PCSM instance synchronizes one source cluster with one target cluster. Multiple source clusters, multiple target clusters, and synchronizing selected namespaces from one source to different targets are not supported.
+* You cannot resume the initial synchronization after it fails. Resolve the issue and start a new synchronization run from the beginning.
 * Arbitrary database upgrades during a sync are not supported. For supported staged upgrades from lower to higher MongoDB major versions, follow the cross-version replication procedure.
 * Reverse synchronization
 * External authentication via Kerberos, AWS and LDAP
-
-
