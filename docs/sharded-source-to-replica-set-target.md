@@ -46,6 +46,8 @@ PCSM_SOURCE_URI="mongodb://source-user:password@mongos-source:27017/admin"
 PCSM_TARGET_URI="mongodb://target-user:password@target1:27017,target2:27017,target3:27017/admin?replicaSet=rs0"
 ```
 
+In this example, `mongos-source:27017` is the `mongos` endpoint for the source sharded cluster. The target URI lists the replica set members and identifies the replica set as `rs0`.
+
 ## usage
 
 The commands and API endpoints are the same as for any other topology. See, [Percona ClusterSync for MongoDB commands](pcsm-commands.md) for the command reference. 
