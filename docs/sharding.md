@@ -10,7 +10,7 @@
 
 The replication workflow for sharded clusters is similar to the workflow for replica sets. See [How {{pcsm.full_name}} works](intro.md#replication-workflows) for an overview of the replication stages.
 
-For sharded deployments, {{pcsm.short}} connects to mongos on both the source and target clusters instead of connecting directly to individual shard members. The source and target can have different numbers of shards.
+For sharded deployments, {{pcsm.short}} connects to `mongos` on both the source and target clusters instead of connecting directly to individual shard members. The source and target can have different numbers of shards.
 
 {{pcsm.short}} does not continuously replicate sharding metadata. For collections with a ranged shard key, it uses the source chunk boundaries to prepare the target before the initial clone begins. Changes to the chunk layout that occur later on the source are not replicated to the target.
 
