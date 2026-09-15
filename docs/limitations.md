@@ -58,5 +58,3 @@ The following functionalities are not supported:
 * Arbitrary database upgrades during a sync are not supported. For supported staged upgrades from lower to higher MongoDB major versions, follow the cross-version replication procedure.
 * Reverse synchronization
 * External authentication via Kerberos, AWS and LDAP
-
-
