@@ -356,8 +356,9 @@ The examples below use target clusters with no pre-existing application namespac
 
     If the source collection was sharded, confirm that the target collection is sharded too.
 
-    !!! note "Chunk distribution differs by design"
-        PCSM replicates data, not sharding metadata. The shard key comes across, but chunk distribution and the primary shard are decided by the target cluster and its balancer, so they will not match the source. A different layout here is expected and does not indicate a problem. See [Chunk distribution](sharding.md#chunk-distribution).
+
+!!! note
+    For a ranged shard key, PCSM recreates the source chunk boundaries on the target before the clone. Later sharding metadata changes are not replicated, so the layouts diverge as each balancer works. That is expected. See [Chunk distribution](sharding.md#chunk-distribution).
 
     Run the same checks on `mongos3` with the databases reversed. There, `db_1` holds the data and its indexes, and `db_0.docs` returns `ns does not exist: db_0.docs`.
 
