@@ -4,7 +4,7 @@ author: Radoslaw Szulgo
 ---
 # Known issues and limitations
 
-This page lists known limitations for using {{pcsm.full_name}}.
+This page lists known limitations for using {{pcsm.full_name}} (PCSM).
 
 ## Versions and topology
 
@@ -28,7 +28,7 @@ This page lists known limitations for using {{pcsm.full_name}}.
 
 The following limitations apply specifically to sharded cluster replication:
 
-* When both the source and target are sharded clusters, {{pcsm.short}} does not continuously replicate sharding metadata. For ranged shard keys, PCSM uses the source chunk boundaries to initialize the target during the initial sync. Subsequent chunk migrations, splits, and merges are not reproduced on the target.
+* When both the source and target are sharded clusters, {{pcsm.short}} does not continuously replicate sharding metadata. For ranged shard keys, PCSM uses the source chunk boundaries to initialize the target during the initial sync. Subsequent chunk migrations, splits, and merges aren't reproduced on the target.
 * The primary shard assignment is not preserved. The target cluster can use a different primary shard.
 * Zone configuration is not replicated. See [Zones for sharded data :octicons-link-external-16:](https://www.mongodb.com/docs/manual/core/zone-sharding/).
 * PCSM does not replicate `reshardCollection`, `unshardCollection`, or `refineCollectionShardKey` operations. Changes to sharding metadata made by these operations are not reproduced on the target.
