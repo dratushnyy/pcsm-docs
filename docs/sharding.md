@@ -14,7 +14,7 @@ For sharded deployments, {{pcsm.short}} connects to `mongos` on both the source 
 
 {{pcsm.short}} does not continuously replicate sharding metadata. For collections with a ranged shard key, it uses the source chunk boundaries to prepare the target before the initial clone begins. Changes to the chunk layout that occur later on the source are not replicated to the target.
 
-The primary shard assignment can also differ between the source and target clusters. See [Chunk distribution](#chunk-distribution).
+The primary shard assignment can also differ between the source and target clusters.
 
 ## Prerequisites
 
