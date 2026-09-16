@@ -85,16 +85,20 @@ The examples below use target clusters with no pre-existing application namespac
         pcsm status
         ```
 
-    6. Finalize each instance. PCSM stops replication, creates the remaining indexes on the target, and exits:
+    6. Initiate finalization for each instance:
+    
 
         ```bash
         pcsm finalize
         ```
 
+        The command returns while the PCSM server continues creating the remaining indexes on the target. Use \`pcsm status\` to monitor the server and confirm when finalization is complete.
+
         !!! warning "Finalization cannot be undone"
             You cannot resume an instance after you finalize it. Running `start` again begins a fresh initial sync and overwrites the target collections a second time. For a migration cutover, stop application writes to the namespaces the instance owns, wait for `lagTimeSeconds` to reach `0`, and finalize only then. Instances you are not cutting over yet keep replicating and are unaffected.
 
-    7. Check the status of each instance after finalization. The following output is from `csync-a`. The `csync-b` output has the same structure with its own operation time and finalization timestamps:
+    7. Check each instance with \`pcsm status\` until its server reports \`state\` as \`finalized\` and \`finalization.completed\` as \`true\`. The following output is from \`csync-a\`. The \`csync-b\` output has the same structure with its own operation time and finalization timestamps:
+
 
         ```bash
         pcsm status
@@ -254,16 +258,19 @@ The examples below use target clusters with no pre-existing application namespac
         pcsm status
         ```
 
-    6. Finalize each instance:
+    6. Initiate finalization for each instance:
 
         ```bash
         pcsm finalize
         ```
 
+        The command returns while the PCSM server continues creating the remaining indexes on the target. Use \`pcsm status\` to monitor the server and confirm when finalization is complete.
+
+
         !!! warning "Finalization cannot be undone"
             You cannot resume an instance after you finalize it. Running `start` again begins a fresh initial sync and overwrites the target collections a second time. For a migration cutover, stop application writes to the namespaces the instance owns, wait for `lagTimeSeconds` to reach `0`, and finalize only then.
 
-    7. Check the status of each instance after finalization. The following output is from `csync-a`:
+    7. Check each instance with \`pcsm status\` until its server reports \`state\` as \`finalized\` and \`finalization.completed\` as \`true\`. The following output is from \`csync-a\`:
 
         ```bash
         pcsm status
@@ -295,7 +302,10 @@ The examples below use target clusters with no pre-existing application namespac
                     "completedAt": "2026-08-21T08:35:48.21823288Z"
                 }
             }
-            ```   
+            ``` 
+
+        If the \`finalization\` object contains an \`unsuccessfulIndexes\` array, review it before you send traffic to that target. See [Unsuccessful indexes]\(install/usage.md#unsuccessful-indexes).
+  
             
     ### Verify the result on sharded targets
 
@@ -357,16 +367,21 @@ The examples below use target clusters with no pre-existing application namespac
     If the source collection was sharded, confirm that the target collection is sharded too.
 
 
-!!! note
-    For a ranged shard key, PCSM recreates the source chunk boundaries on the target before the clone. Later sharding metadata changes are not replicated, so the layouts diverge as each balancer works. That is expected. See [Chunk distribution](sharding.md#chunk-distribution).
+    !!! note
+        For a ranged shard key, PCSM recreates the source chunk boundaries on the target before the clone. Later sharding metadata changes are not replicated, so the layouts diverge as each balancer works. That is expected. See [Chunk distribution](sharding.md#chunk-distribution).
 
     Run the same checks on `mongos3` with the databases reversed. There, `db_1` holds the data and its indexes, and `db_0.docs` returns `ns does not exist: db_0.docs`.
 
 ## Check the logs
 
-Every instance logs separately, so check each one for errors before you decommission the source or send traffic to a target. Command responses go to `stdout` and logs and errors go to `stderr`. See [Logging in Percona ClusterSync for MongoDB](logging.md).
+Every instance logs separately, so check each one for errors before you decommission the source or send traffic to a target.
 
-If an instance stops because of lost connectivity or a similar failure after `initialSync.completed` becomes `true` and before finalization, bring it back with `pcsm resume --from-failure`. An interruption during initial synchronization cannot be resumed; restart the clone as described in [Recover PCSM during initial data clone](troubleshooting.md#recover-pcsm-during-initial-data-clone). See [Resume the replication](pcsm-commands.md#resume) for command details.
+- The PCSM server writes logs to `stdout`.
+- Client subcommands write command responses to `stdout` and logs and errors to `stderr`.
+
+See [Logging in Percona ClusterSync for MongoDB](logging.md).
+
+If replication fails after initial sync has finished but before finalization, use `pcsm resume --from-failure` while the PCSM server is running. If the PCSM process has stopped, restart it before running the command. An interruption during initial sync cannot be resumed. Restart the clone as described in [Recover PCSM during initial data clone](troubleshooting.md#recover-pcsm-during-initial-data-clone). For command details, see [Resume the replication](pcsm-commands.md#resume).
 
 ## Next steps
 
