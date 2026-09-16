@@ -50,7 +50,7 @@ The following limitations apply specifically to sharded cluster replication:
 
 The following limitations apply:
 
-* You cannot resume the initial synchronization after it fails. Resolve the issue and start a new synchronization run from the beginning.
+* You cannot resume the clone phase after it fails. Resolve the issue and start a new synchronization run from the beginning.
 * Arbitrary database upgrades during a sync are not supported. For supported staged upgrades from lower to higher MongoDB major versions, follow the cross-version replication procedure.
 * Reverse synchronization, from the target cluster back to the source, is not supported.
 * External authentication through Kerberos, LDAP, and AWS IAM is not supported.
