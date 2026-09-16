@@ -23,7 +23,7 @@ During change replication, PCSM skips `shardCollection` events coming from the s
 
 | **On the source** | **On the replica set target** |
 |---|---|
-| Sharded collection | Created as a regular collection. All documents are copied. The shard key isn't applied because it doesn't apply to a replica set. |
+| Sharded collection | Created as a regular collection. Documents are copied only if `_id` values are unique across all source shards because the replica set target enforces collection-wide `_id` uniqueness. The shard key isn't applied because it doesn't apply to a replica set. |
 | Unsharded collection | Created and copied as in a replica set to replica set sync. |
 | Chunk distribution and primary shard | Not preserved. PCSM replicates data, not cluster metadata. |
 
