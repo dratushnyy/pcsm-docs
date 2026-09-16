@@ -264,13 +264,13 @@ The examples below use target clusters with no pre-existing application namespac
         pcsm finalize
         ```
 
-        The command returns while the PCSM server continues creating the remaining indexes on the target. Use \`pcsm status\` to monitor the server and confirm when finalization is complete.
+        The command returns while the PCSM server continues creating the remaining indexes on the target. Use `pcsm status` to monitor the server and confirm when finalization is complete.
 
 
         !!! warning "Finalization cannot be undone"
             You cannot resume an instance after you finalize it. Running `start` again begins a fresh initial sync and overwrites the target collections a second time. For a migration cutover, stop application writes to the namespaces the instance owns, wait for `lagTimeSeconds` to reach `0`, and finalize only then.
 
-    7. Check each instance with \`pcsm status\` until its server reports \`state\` as \`finalized\` and \`finalization.completed\` as \`true\`. The following output is from \`csync-a\`:
+    7. Check each instance with `pcsm status` until its server reports `state` as `finalized` and `finalization.completed` as `true`. The following output is from `csync-a`:
 
         ```bash
         pcsm status
@@ -304,7 +304,7 @@ The examples below use target clusters with no pre-existing application namespac
             }
             ``` 
 
-        If the \`finalization\` object contains an \`unsuccessfulIndexes\` array, review it before you send traffic to that target. See [Unsuccessful indexes]\(install/usage.md#unsuccessful-indexes).
+        If the `finalization` object contains an `unsuccessfulIndexes` array, review it before you send traffic to that target. See [Unsuccessful indexes](install/usage.md#unsuccessful-indexes).
   
             
     ### Verify the result on sharded targets
