@@ -18,9 +18,8 @@ The primary shard assignment can also differ between the source and target clust
 
 ## Prerequisites
 
-* If the target is a sharded MongoDB deployment, use {{pcsm.full_name}} 0.7.0 or later.
-* If the target is a replica set, use {{pcsm.full_name}} 0.10.0 or later.
-* The source must be a sharded MongoDB deployment.
+* Use {{pcsm.full_name}} 0.7.0 or later.
+* Both the source and target clusters must be sharded MongoDB deployments.
 * Both clusters must be running the same MongoDB version. Check [Version requirements](deployment.md#version-requirements) for more information about supported versions.
 
 ## Connection string format
@@ -44,18 +43,6 @@ For collections with a ranged shard key, {{pcsm.short}} uses the source chunk bo
 Collections with a hashed shard key keep the initial chunk layout created by MongoDB when shardCollection runs on the target.
 
 {{pcsm.short}} does not continuously replicate sharding metadata after the initial preparation. See [Chunk distribution](#chunk-distribution).
-
-### Replica set source to sharded target
-
-PCSM replicates data from a replica set source to a sharded cluster target, but it does not shard anything on the way in. Collections arrive on the target as unsharded collections on the primary shard, exactly as they existed on the source.
-
-There is no warning about this while it happens. The run completes normally, `pcsm status` reports success, and the logs show nothing unusual. The only way to notice is to check the collections on the target afterwards.
-
-!!! warning
-
-    If you are moving to a sharded cluster in order to distribute a large collection, this migration alone does not get you there. Shard the collections yourself on the target once replication is finalized, using [sh.shardCollection() :octicons-link-external-16:](https://www.mongodb.com/docs/manual/reference/method/sh.shardCollection/){:target="_blank"}.
-
-    Sharding a collection that already holds data means the balancer has to redistribute it afterwards, which takes time and I/O on a cluster you have just finished filling. Factor that into your cutover plan rather than discovering it on the day.
 
 ### Balancer operation
 
