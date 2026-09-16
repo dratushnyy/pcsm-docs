@@ -92,12 +92,12 @@ The examples below use target clusters with no pre-existing application namespac
         pcsm finalize
         ```
 
-        The command returns while the PCSM server continues creating the remaining indexes on the target. Use \`pcsm status\` to monitor the server and confirm when finalization is complete.
+        The command returns while the PCSM server continues creating the remaining indexes on the target. Use `pcsm status` to monitor the server and confirm when finalization is complete.
 
         !!! warning "Finalization cannot be undone"
             You cannot resume an instance after you finalize it. Running `start` again begins a fresh initial sync and overwrites the target collections a second time. For a migration cutover, stop application writes to the namespaces the instance owns, wait for `lagTimeSeconds` to reach `0`, and finalize only then. Instances you are not cutting over yet keep replicating and are unaffected.
 
-    7. Check each instance with \`pcsm status\` until its server reports \`state\` as \`finalized\` and \`finalization.completed\` as \`true\`. The following output is from \`csync-a\`. The \`csync-b\` output has the same structure with its own operation time and finalization timestamps:
+    7. Check each instance with `pcsm status` until its server reports `state` as `finalized` and `finalization.completed` as `true`. The following output is from `csync-a`. The `csync-b` output has the same structure with its own operation time and finalization timestamps:
 
 
         ```bash
