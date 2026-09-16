@@ -125,12 +125,7 @@ Instead, {{pcsm.short}} estimates the size of each source chunk and processes th
 
 If {{pcsm.short}} cannot prepare the chunk layout on the target, the clone fails. It does not fall back to copying the data into an unsplit collection.
 
-Check the PCSM logs for the reported error and resolve the issue on the target cluster. Then resume replication:
-
-```sh
-pcsm resume --from-failure
-```
-See [Resume the replication](install/usage.md#resume-the-replication), [Logging in {{pcsm.full_name}}](logging.md), and the [Troubleshooting guide](troubleshooting.md).
+Check the PCSM logs for the reported error and resolve the issue on the target cluster. Then reset the PCSM state and restart replication from scratch. See [Recover PCSM during initial data clone](troubleshooting.md#recover-pcsm-during-initial-data-clone) for the required steps.
 
 ### Check the chunk distribution
 
