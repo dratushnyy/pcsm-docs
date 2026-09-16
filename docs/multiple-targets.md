@@ -385,5 +385,6 @@ If replication fails after initial sync has finished but before finalization, us
 
 ## Next steps
 
-- [Use Percona ClusterSync for MongoDB](./install/usage.md)
-- [Sharding support in Percona ClusterSync for MongoDB](./sharding.md)
+- [Use Percona ClusterSync for MongoDB](./install/usage.md){.md-button}
+
+- [Sharding support in Percona ClusterSync for MongoDB](./sharding.md){.md-button}
