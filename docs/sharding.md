@@ -119,7 +119,7 @@ Instead, {{pcsm.short}} estimates the size of each source chunk and processes th
 
 ### Hashed shard keys
 
-{{pcsm.short}} does not pre-split hashed collections. MongoDB already spreads the initial chunks evenly across the shards for a hashed shard key, so {{pcsm.short}} keeps that layout. See [Hashed sharding :octicons-link-external-16:](https://www.mongodb.com/docs/manual/core/hashed-sharding/){:target="_blank"} in the MongoDB documentation.
+{{pcsm.short}} does not pre-split a collection whose shard key contains a hashed field. The target keeps the initial chunk layout MongoDB creates when `shardCollection` runs, and the target balancer manages it from there.
 
 ### If the pre-split fails
 
