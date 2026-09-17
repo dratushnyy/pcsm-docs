@@ -73,8 +73,8 @@ Collections with a hashed shard key use the initial chunk layout created by Mong
 
 ### Same number of shards
 
-When the source and target have the same number of shards, PCSM sorts the shard IDs in each cluster and pairs them by their position in the sorted lists. For example, the first source shard is paired with the first target shard, the second source shard with the second target shard, and so on. 
-
+For a source collection with more than one chunk, if the source and target have the same number of shards, {{pcsm.short}} sorts the shard IDs in each cluster and pairs them by their position in the sorted lists. For example, the first source shard is paired with the first target shard, the second source shard with the second target shard, and so on.
+ 
 PCSM then recreates each source chunk boundary on the target and places the corresponding target chunk on the shard paired with the source shard that owns that chunk.
 
 ??? example "Same number of shards"
@@ -95,7 +95,7 @@ PCSM then recreates each source chunk boundary on the target and places the corr
 
 ### Different number of shards
 
-When the source and target have different numbers of shards, the source chunk ownership cannot be mapped one-to-one to the target. 
+For a source collection with more than one chunk, if the source and target have different numbers of shards, {{pcsm.short}} cannot map source chunk ownership directly to the target.
 
 Instead, {{pcsm.short}} estimates the size of each source chunk and processes the largest chunks first. It places each chunk on the target shard that currently has the smallest estimated amount of assigned data.
 
@@ -120,12 +120,6 @@ Instead, {{pcsm.short}} estimates the size of each source chunk and processes th
 ### Hashed shard keys
 
 {{pcsm.short}} does not pre-split a collection whose shard key contains a hashed field. The target keeps the initial chunk layout MongoDB creates when `shardCollection` runs, and the target balancer manages it from there.
-
-### If the pre-split fails
-
-If {{pcsm.short}} cannot prepare the chunk layout on the target, the clone fails. It does not fall back to copying the data into an unsplit collection.
-
-Check the PCSM logs for the reported error and resolve the issue on the target cluster. Then reset the PCSM state and restart replication from scratch. See [Recover PCSM during initial data clone](troubleshooting.md#recover-pcsm-during-initial-data-clone) for the required steps.
 
 ### Check the chunk distribution
 
