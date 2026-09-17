@@ -52,7 +52,7 @@ Before starting the initial sync, {{pcsm.short}} checks which collections are sh
 
 ### Chunk distribution
 
-When the target is sharded, {{pcsm.short}} does not preserve chunk distribution information from the source cluster. The target balancer manages chunk distribution. As a result, chunks may be distributed differently on the source and target clusters.
+For ranged shard keys, {{pcsm.short}} uses the source chunk boundaries to pre-split a sharded target before the clone begins. Collections with a hashed shard key keep the layout MongoDB creates. From there each cluster's balancer manages its own placement, so the layouts can differ.
 
 The target sharded cluster already knows which collections are sharded and manages their chunk distribution. {{pcsm.short}} does not interfere with the target cluster's sharding configuration or chunk distribution.
 
