@@ -20,7 +20,7 @@ The primary shard assignment can also differ between the source and target clust
 
 * Use {{pcsm.full_name}} 0.7.0 or later. Automatic source chunk boundary preparation requires version 0.10.0 or later.
 * Both the source and target clusters must be sharded MongoDB deployments.
-* Both clusters must be running the same MongoDB version. Check [Version requirements](deployment.md#version-requirements) for more information about supported versions.
+* The source and target clusters must use a supported version combination. See [Cross-version replication](cross-version.md) for supported source and target versions.
 
 ## Connection string format
 
