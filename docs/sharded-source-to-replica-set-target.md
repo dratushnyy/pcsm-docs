@@ -21,14 +21,18 @@ During change replication, PCSM skips `shardCollection` events coming from the s
 
 ## What is replicated
 
+!!! warning
+    `_id` values must be unique across all source shards. PCSM does not verify their uniqueness. If duplicates exist, documents may be silently skipped or overwritten without causing the synchronization to fail.
+
 | **On the source** | **On the replica set target** |
 |---|---|
-| Sharded collection | Created as a regular collection. Documents are copied only if `_id` values are unique across all source shards because the replica set target enforces collection-wide `_id` uniqueness. The shard key isn't applied because it doesn't apply to a replica set. |
+| Sharded collection | Created as a regular collection. The shard key isn't applied because it doesn't apply to a replica set. |
 | Unsharded collection | Created and copied as in a replica set to replica set sync. |
 | Chunk distribution and primary shard | Not preserved. PCSM replicates data, not cluster metadata. |
 
 ## Before you start
 
+* Ensure that `_id` values are unique across all source shards in every collection you want to replicate.
 * Ensure the source and target MongoDB versions meet the version requirements.
 * Configure authentication for both deployments.
 * Configure the source connection string with the `mongos` hostname and port. Configure the target connection string with the replica set members.
@@ -160,21 +164,3 @@ The commands and API endpoints are the same as for any other topology. See [Perc
 ## Learn more
 
 [Shard Keys :octicons-link-external-16:](https://www.mongodb.com/docs/manual/core/sharding-shard-key/){:target="_blank"}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
