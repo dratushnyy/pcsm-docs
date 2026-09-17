@@ -242,7 +242,7 @@ The examples below use target clusters with no pre-existing application namespac
             }
             ```
 
-        Before the clone begins, PCSM checks which of the selected collections are sharded on the source and creates matching sharded collections on the target, carrying over the shard key.
+        Before the clone begins, PCSM checks which of the selected collections are sharded on the source and creates matching sharded collections on the target, carrying over the shard key and, for ranged shard keys, recreating the source chunk boundaries.
 
 
     4. Start replication on `csync-b`:
