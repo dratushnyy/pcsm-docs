@@ -239,6 +239,8 @@ The `/status`, `/start`, `/pause`, `/resume`, and `/finalize` endpoints can retu
 |-------|------|-------------|
 | `me.instanceId` | string | Identifier of the instance that handled the request |
 | `role` | string | Role of the instance that handled the request (`ACTIVE` or `STANDBY`) |
+| `message` | string | Present in `not_active` responses. States the role of the responding instance and the `host:port` of the ACTIVE instance when one is known |
+| `group.name` | string | Name of the HA group, set with `--group-name` |
 | `group.term` | number | Current HA term |
 | `group.members` | array | Live members observed by the instance |
 | `group.members[].instanceId` | string | Identifier of the listed member |
