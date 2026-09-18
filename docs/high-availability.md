@@ -165,7 +165,7 @@ For example, an operational request sent to a standby returns HTTP `409` with `e
   },
   "role": "STANDBY",
   "group": {
-    "term": 7,
+    "term": 0,
     "members": [
       {
         "instanceId": "<instance-id>",
@@ -227,7 +227,7 @@ PCSM exposes the following HA metrics through `/metrics`:
 | Metric                                                  | Description                                                                                                             |
 | ------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `percona_clustersync_mongodb_ha_active`                 | Shows the current role. `1` means ACTIVE and `0` means STANDBY.                                                         |
-| `percona_clustersync_mongodb_ha_term`                   | Shows the current HA lease term.                                                                                        |
+| `percona_clustersync_mongodb_ha_term`| Shows the HA lease term that this instance advertises.|
 | `percona_clustersync_mongodb_ha_role_transitions_total` | Counts role changes for the PCSM instance.                                                                              |
 | `percona_clustersync_mongodb_ha_info`                   | Reports instance information. The metric has a constant value of `1` and includes the `instance_id` and `group` labels. |
 
@@ -246,13 +246,15 @@ Clear the recorded member information:
 pcsm reset members --target "<target-mongodb-uri>"
 ```
 
-Clear the HA lease:
+Clear all stored PCSM state, including the HA lease and replication checkpoints:
 
 ```bash
-pcsm reset lease --target "<target-mongodb-uri>"
+
+pcsm reset --target "<target-mongodb-uri>"
+
 ```
 
-Use these commands only when you need to clear HA coordination state. To clear all PCSM state, use `pcsm reset`.
+Use these commands only when you need to clear stored PCSM state. The `pcsm reset` command removes both HA coordination and replication state.
 
 ## Upgrade from PCSM 0.9.0
 
