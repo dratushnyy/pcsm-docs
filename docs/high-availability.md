@@ -249,7 +249,7 @@ pcsm reset members --target "<target-mongodb-uri>"
 Clear the HA lease:
 
 ```bash
-pcsm reset lease --target "<target-mongodb-uri>
+pcsm reset lease --target "<target-mongodb-uri>"
 ```
 
 Use these commands only when you need to clear HA coordination state. To clear all PCSM state, use `pcsm reset`.
