@@ -8,7 +8,7 @@ Check the [system requirements](../system-requirements.md)  and [known limitatio
 
 To build {{pcsm.full_name}} from source, you need the following:
 
-- Go 1.24 or later. [Install and set up Go tools :octicons-link-external-16:](https://golang.org/doc/install)
+- Go 1.27 or later. [Install and set up Go tools :octicons-link-external-16:](https://golang.org/doc/install)
 - make
 - git
 
